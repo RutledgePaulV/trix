@@ -1,0 +1,21 @@
+{{#each items}}
+    <div class="card">
+        <div class="content">
+            <img class="right floated mini ui image" src="{{icon_large}}">
+            <div class="header">
+                {{name}}
+            </div>
+            <div class="meta">
+                {{type}}
+            </div>
+            <div class="description">
+                {{description}}
+            </div>
+        </div>
+        <div class="extra content">
+            <div class="ui right floated">
+                <div class="ui right floated basic green button js-duplicate" data-id="{{id}}">Duplicate</div>
+            </div>
+        </div>
+    </div>
+{{/each}}

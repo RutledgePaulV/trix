@@ -1,0 +1,27 @@
+{
+  "name": "trix",
+  "version": "0.0.1",
+  "authors": [
+    "Paul Ruteldge <paul.v.rutledge@gmail.com>"
+  ],
+  "description": "An educational example of social engineering.",
+  "main": "app/index.js",
+  "keywords": [
+    "social",
+    "engineering",
+    "electron",
+    "runescape"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/rutledgepaulv/trix",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.2.1"
+  }
+}

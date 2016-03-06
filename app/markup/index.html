@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Runescape Item Duplicator</title>
+    <link rel="stylesheet" type="text/css" href="../../semantic/dist/semantic.min.css">
+    <script>
+        window.$ = window.jQuery = require('../../bower_components/jquery/dist/jquery.min');
+    </script>
+    <script src="../../semantic/dist/semantic.min.js"></script>
+    <script src="../client/index.js"></script>
+</head>
+<body>
+<section>
+
+    <div class="ui menu">
+        <div class="item">
+            <div class="ui action input">
+                <select id="categories" class="ui search dropdown" multiple=""></select>
+            </div>
+        </div>
+        <div class="right item">
+            <div id="search-container" class="ui left icon input">
+                <input id="item-search" type="text" placeholder="Search...">
+                <i class="search icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui segment">
+
+        <div id="results" class="ui cards"></div>
+
+    </div>
+</section>
+</body>
+</html>
