@@ -1,0 +1,18 @@
+<div class="ui modal">
+    <div class="header">
+        <h3>{{name}}</h3>
+        <a class="ui purple label">{{type}}</a>
+        <a class="ui yellow label">{{current.price}} gp</a>
+        {{#if members}}
+            <a class="ui red label">Members only</a>
+        {{/if}}
+    </div>
+    <div class="content">
+        <img src="{{icon_large}}"/>
+        <p>{{description}}</p>
+    </div>
+    <div class="actions">
+        <div class="ui approve button">Duplicate</div>
+        <div class="ui cancel button">Cancel</div>
+    </div>
+</div>

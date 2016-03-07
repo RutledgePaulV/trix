@@ -1,55 +1,56 @@
 'use strict';
 
 var Client = require('node-rest-client').Client;
+var alphabet = 'a b c d e f g h i j k l m n o p q r s t u v w x y z'.split(' ');
+var cache = window.sessionStorage;
 
 class RunescapeService {
 
     constructor() {
 
-        this.cache = {};
         this.headers = {'Accept': 'application/json'};
         this.client = new Client();
 
-        this.categories = {
-            0: 'Miscellaneous',
-            1: 'Ammo',
-            2: 'Arrows',
-            3: 'Bolts',
-            4: 'Construction materials',
-            5: 'Construction projects',
-            6: 'Cooking ingredients',
-            7: 'Costumes',
-            8: 'Crafting materials',
-            9: 'Familiars',
-            10: 'Farming produce',
-            11: 'Fletching materials',
-            12: 'Food and drink',
-            13: 'Herblore materials',
-            14: 'Hunting equipment',
-            15: 'Hunting produce',
-            16: 'Jewellery',
-            17: 'Mage armour',
-            18: 'Mage weapons',
-            19: 'Melee armour - low level',
-            20: 'Melee armour - mid level',
-            21: 'Melee armour - high level',
-            22: 'Melee weapons - low level',
-            23: 'Melee weapons - mid level',
-            24: 'Melee weapons - high level',
-            25: 'Mining and smithing',
-            26: 'Potions',
-            27: 'Prayer armour',
-            28: 'Prayer materials',
-            29: 'Range armour',
-            30: 'Range weapons',
-            31: 'Runecrafting',
-            32: 'Runes, Spells and Teleports',
-            33: 'Seeds',
-            34: 'Summoning scrolls',
-            35: 'Tools and containers',
-            36: 'Woodcutting product',
-            37: 'Pocket items'
-        };
+        this.categories = [
+            'Miscellaneous',
+            'Ammo',
+            'Arrows',
+            'Bolts',
+            'Construction materials',
+            'Construction projects',
+            'Cooking ingredients',
+            'Costumes',
+            'Crafting materials',
+            'Familiars',
+             'Farming produce',
+             'Fletching materials',
+             'Food and drink',
+             'Herblore materials',
+             'Hunting equipment',
+             'Hunting produce',
+             'Jewellery',
+             'Mage armour',
+             'Mage weapons',
+             'Melee armour - low level',
+             'Melee armour - mid level',
+             'Melee armour - high level',
+             'Melee weapons - low level',
+             'Melee weapons - mid level',
+             'Melee weapons - high level',
+             'Mining and smithing',
+             'Potions',
+             'Prayer armour',
+             'Prayer materials',
+             'Range armour',
+             'Range weapons',
+             'Runecrafting',
+             'Runes, Spells and Teleports',
+             'Seeds',
+             'Summoning scrolls',
+             'Tools and containers',
+             'Woodcutting product',
+             'Pocket items'
+        ];
 
         this.client.registerMethod('getCategoryDetail', "http://services.runescape.com/m=itemdb_rs/api/catalogue/category.json", "GET");
         this.client.registerMethod("searchItems", "http://services.runescape.com/m=itemdb_rs/api/catalogue/items.json", "GET");
@@ -63,7 +64,7 @@ class RunescapeService {
     getCategoryDetail(categoryId, callback) {
         var parameters = {category: categoryId};
 
-        this.cachedCall(parameters, this.client.methods.getCategoryInformation, function(data) {
+        this.cachedCall(parameters, this.client.methods.getCategoryDetail, function(data) {
             var count = 0;
 
             if(data.hasOwnProperty('alpha')) {
@@ -84,13 +85,28 @@ class RunescapeService {
         this.cachedCall(params, this.client.methods.getItemDetail, callback);
     }
 
-    searchItems(categories, terms, callback) {
+    searchItems(categories, term, callback) {
 
         var that = this;
 
+        var terms = [];
+
+        if(term === '') {
+            terms = alphabet;
+        } else {
+            terms.push(term);
+        }
+
+        if(categories === '' || categories === null || categories === undefined || categories.length === 0) {
+            categories = [];
+            for(var i = 0; i < this.getCategories().length; i++) {
+                categories.push(i);
+            }
+        }
+
         terms.forEach(function(term) {
             categories.forEach(function(categoryId) {
-                var parameters = {category: categoryId, alpha: term, page: 1};
+                var parameters = {category: categoryId.toString(), alpha: term.toString(), page: 1};
 
                 if(term === '' || !term) {
                     callback({});
@@ -105,15 +121,18 @@ class RunescapeService {
 
     cachedCall(parameters, method, callback) {
         var args = { parameters: parameters, headers: this.headers };
-        var key = JSON.stringify({args: args, method: method});
+        var key = JSON.stringify(parameters);
 
-        if(key in this.cache) {
-            return callback(this.cache[key]);
+        if(cache.getItem(key)) {
+            return callback(JSON.parse(cache.getItem(key)));
         } else {
-            var that = this;
             return method(args, function(data) {
-                that.cache[key] = JSON.parse(data);
-                callback(that.cache[key]);
+                if(data.length) {
+                    cache.setItem(key, JSON.stringify(JSON.parse(data)));
+                    callback(JSON.parse(cache.getItem(key)));
+                } else {
+                    callback({});
+                }
             });
         }
     }
